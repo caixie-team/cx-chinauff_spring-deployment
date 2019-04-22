@@ -1,0 +1,29 @@
+version: '3'
+ 
+services:
+  reverse-proxy:
+    image: traefik
+    restart: always
+    container_name: traefik
+    ports:
+      - 80:80
+      - 8360:8360
+#      - 443:443
+      - 127.0.0.1:4399:4399
+      - 127.0.0.1:4398:4398
+    networks:
+      - traefik
+    command: traefik -c /etc/traefik.toml
+    volumes:
+# 仅限标准的 Linux 环境
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/etc/traefik.toml
+#      - ./ssl/lab.com.key:/data/ssl/lab.com.key
+#      - ./ssl/lab.com.crt:/data/ssl/lab.com.crt
+      - ./logs:/data/logs
+ 
+networks:
+  traefik:
+    external: true
